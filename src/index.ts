@@ -7,6 +7,7 @@ import corsOptions from './config/corsOptions';
 import PdfFilesRouter from './routes/pdfFilesRouter'
 import errorHandler from './middleware/errorHandler'
 import notFoundRoute from './routes/notFoundRoute'
+import logger from './middleware/logger'
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || ''
@@ -14,6 +15,8 @@ const MONGODB_URI = process.env.MONGODB_URI || ''
 const app = express()
 app.use(express.json())
 app.use(cors(corsOptions))
+
+app.use(logger)
 
 app.get('/test', (req, res) => {
   res.json('test route')
