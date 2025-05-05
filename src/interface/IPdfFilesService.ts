@@ -1,11 +1,12 @@
 import IPdfFile from "./IPdfFile";
+import { ServiceReturnType } from '../constants/types'
 
 interface IPdfFilesService {
-  getPdfFiles(page: number): Promise<IPdfFile[]>
-  getPdfFileById(pdfFileId: string): Promise<IPdfFile | null>
-  createPdfFile(data: Partial<IPdfFile>): Promise<IPdfFile>
-  updatePdfFile(pdfFileId: string, data: Partial<IPdfFile>): Promise<IPdfFile | null>
-  deletePdfFile(pdfFileId: string): Promise<IPdfFile | null>
+  getPdfFiles(page: number): ServiceReturnType<IPdfFile[]>
+  getPdfFileById(pdfFileId: string): ServiceReturnType<IPdfFile | null>
+  createPdfFile(data: Partial<IPdfFile>): ServiceReturnType<IPdfFile>
+  updatePdfFile(pdfFileId: string, data: Partial<IPdfFile>): ServiceReturnType<IPdfFile | null>
+  deletePdfFile(pdfFileId: string): ServiceReturnType<IPdfFile | null>
 }
 
 export default IPdfFilesService

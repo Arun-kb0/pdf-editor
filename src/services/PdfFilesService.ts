@@ -1,6 +1,8 @@
+import { ServiceReturnType } from "../constants/types";
 import IPdfFile from "../interface/IPdfFile";
 import IPdfFilesRepo from "../interface/IPdfFilesRepo";
 import IPdfFilesService from "../interface/IPdfFilesService";
+import { handleServiceData } from '../util/handleService'
 
 class PdfFilesService implements IPdfFilesService {
 
@@ -8,27 +10,28 @@ class PdfFilesService implements IPdfFilesService {
     private pdfFileRepo: IPdfFilesRepo
   ) { }
 
-  getPdfFiles(page: number): Promise<IPdfFile[]> {
+  getPdfFiles(page: number): ServiceReturnType<IPdfFile[]> {
     throw new Error("Method not implemented.");
   }
 
-  getPdfFileById(pdfFileId: string): Promise<IPdfFile | null> {
+  getPdfFileById(pdfFileId: string): ServiceReturnType<IPdfFile | null> {
     throw new Error("Method not implemented.");
   }
 
-  createPdfFile(data: Partial<IPdfFile>): Promise<IPdfFile> {
+  async createPdfFile(data: Partial<IPdfFile>): ServiceReturnType<IPdfFile> {
     try {
-      return this.pdfFileRepo.createPdfFile(data)
+      const newFile = await this.pdfFileRepo.createPdfFile(data)
+      return handleServiceData(newFile)
     } catch (error) {
       throw error
-    } 
+    }
   }
 
-  updatePdfFile(pdfFileId: string, data: Partial<IPdfFile>): Promise<IPdfFile | null> {
+  updatePdfFile(pdfFileId: string, data: Partial<IPdfFile>): ServiceReturnType<IPdfFile | null> {
     throw new Error("Method not implemented.");
   }
 
-  deletePdfFile(pdfFileId: string): Promise<IPdfFile | null> {
+  deletePdfFile(pdfFileId: string): ServiceReturnType<IPdfFile | null> {
     throw new Error("Method not implemented.");
   }
 
