@@ -1,7 +1,7 @@
 import { Model } from "mongoose";
 import IPdfFilesBaseRepo from "../../interface/IPdfFilesBaseRepo";
 import { IPdfFileDb, PdfFileModel } from '../../model/pdfFileModel'
-import { convertIPdfFileToIPdfFileDb } from "../../util/converter";
+import { convertIPdfFileToIPdfFileDb, convertToObjectId } from "../../util/converter";
 import handleRepoError from "../../util/handleRepoError";
 
 class PdfFilesBaseRepo<T, U> implements IPdfFilesBaseRepo<T, U> {
@@ -44,8 +44,18 @@ class PdfFilesBaseRepo<T, U> implements IPdfFilesBaseRepo<T, U> {
     }
   }
 
-  findByIdAndUpdate(id: string, data: T): Promise<U | null> {
-    throw new Error("Method not implemented.");
+  async findByIdAndUpdate(id: string, data: T): Promise<U | null> {
+    try {
+      const objId = convertToObjectId(id)
+      const updatedFile = await this.PdfFIlesModel.findOneAndUpdate(
+        { _id: objId },
+        { $set: data as Partial<IPdfFileDb> },
+        { new: true }
+      )
+      return updatedFile as unknown as U
+    } catch (error) {
+      return handleRepoError(error)
+    }
   }
 
   findByIdAndDelete(id: string): Promise<U | null> {

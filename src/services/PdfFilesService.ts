@@ -41,8 +41,13 @@ class PdfFilesService implements IPdfFilesService {
     }
   }
 
-  updatePdfFile(pdfFileId: string, data: Partial<IPdfFile>): ServiceReturnType<IPdfFile | null> {
-    throw new Error("Method not implemented.");
+  async updatePdfFile(pdfFileId: string, data: Partial<IPdfFile>): ServiceReturnType<IPdfFile | null> {
+    try {
+      const updatedPdfFile = await this.pdfFileRepo.findPdfFileByIdAndUpdate(pdfFileId, data)
+      return handleServiceData(updatedPdfFile)
+    } catch (error) {
+      throw error
+    }
   }
 
   deletePdfFile(pdfFileId: string): ServiceReturnType<IPdfFile | null> {

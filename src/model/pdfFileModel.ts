@@ -1,7 +1,8 @@
-import mongoose, { Schema, Document, Date } from 'mongoose';
+import mongoose, { Schema, Document, Date, Types } from 'mongoose';
 
 
 export interface IPdfFileDb extends Document {
+  _id: Types.ObjectId
   name: string;
   file: {
     data: Buffer;

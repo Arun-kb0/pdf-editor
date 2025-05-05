@@ -14,6 +14,7 @@ export const convertToObjectId = (id: string): Types.ObjectId | null => {
 
 export const convertIPdfFileDbToIPdfFile = (pdfFile: IPdfFileDb): IPdfFile => {
   return {
+    _id: pdfFile._id.toString(),
     name: pdfFile.name,
     file: {
       data: pdfFile.file.data,

@@ -42,8 +42,18 @@ class PdfFilesRepo implements IPdfFilesRepo {
     }
   }
 
-  findPdfFileByIdAndUpdate(id: string, data: Partial<IPdfFile>): Promise<IPdfFile | null> {
-    throw new Error("Method not implemented.");
+  async findPdfFileByIdAndUpdate(id: string, data: Partial<IPdfFile>): Promise<IPdfFile | null> {
+    try {
+      console.log('inside repo ')
+      console.log(data)
+      const convertedPdfFile = convertIPdfFileToIPdfFileDb(data)
+      console.log(convertedPdfFile)
+
+      const updatedFile = await this.pdfFileBaseRepo.findByIdAndUpdate(id, convertedPdfFile)
+      return updatedFile ? convertIPdfFileDbToIPdfFile(updatedFile) : null
+    } catch (error) {
+      throw error
+    }
   }
 
   findPdfFileByIdAndDelete(id: string): Promise<IPdfFile | null> {

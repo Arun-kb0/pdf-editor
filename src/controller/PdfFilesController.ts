@@ -48,8 +48,25 @@ class PdfFilesController implements IPdfFilesController {
     }
   }
 
-  updatePdfFile(req: Request, res: Response, next: NextFunction): Promise<void> {
-    throw new Error("Method not implemented.");
+  async updatePdfFile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { file } = req
+      const { pdfFileId } = req.params
+      console.log('pdfFileId ', pdfFileId)
+
+      if (!file || !pdfFileId) throw new HttpError(httpStatus.BAD_REQUEST, 'file and id are required')
+      const pdfFile: Partial<IPdfFile> = {
+        file: {
+          data: file.buffer,
+          contentType: "pdf"
+        },
+      }
+      const svcRes = await this.pdfFilesService.updatePdfFile(pdfFileId, pdfFile)
+      validateResponse(svcRes)
+      res.status(httpStatus.OK).json({ updatedFile: svcRes.data })
+    } catch (error) {
+      next(error)
+    }
   }
 
   deletePdfFile(req: Request, res: Response, next: NextFunction): Promise<void> {
