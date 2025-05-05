@@ -12,8 +12,16 @@ class PdfFilesController implements IPdfFilesController {
     private pdfFilesService: IPdfFilesService
   ) { }
 
-  getPdfFIles(req: Request, res: Response, next: NextFunction): Promise<void> {
-    throw new Error("Method not implemented.");
+  async getPdfFIles(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { page } = req.query
+      if (!page && isNaN(Number(page))) throw new HttpError(httpStatus.BAD_REQUEST, 'Page is required.')
+      const svcRes = await this.pdfFilesService.getPdfFiles(Number(page))
+      validateResponse(svcRes)
+      res.status(httpStatus.OK).json(svcRes.data)
+    } catch (error) {
+      next(error)
+    }
   }
 
   getPdfFile(req: Request, res: Response, next: NextFunction): Promise<void> {

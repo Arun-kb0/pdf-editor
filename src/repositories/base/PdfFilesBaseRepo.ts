@@ -1,12 +1,13 @@
+import { Model } from "mongoose";
 import IPdfFilesBaseRepo from "../../interface/IPdfFilesBaseRepo";
-import { PdfFileModel } from '../../model/pdfFileModel'
+import { IPdfFileDb, PdfFileModel } from '../../model/pdfFileModel'
 import { convertIPdfFileToIPdfFileDb } from "../../util/converter";
 import handleRepoError from "../../util/handleRepoError";
 
 class PdfFilesBaseRepo<T, U> implements IPdfFilesBaseRepo<T, U> {
 
   constructor(
-    private PdfFIlesModel: any, // Replace with the actual model type
+    private PdfFIlesModel: Model<IPdfFileDb>
   ) { }
 
   count(): Promise<number> {
@@ -18,8 +19,16 @@ class PdfFilesBaseRepo<T, U> implements IPdfFilesBaseRepo<T, U> {
     }
   }
 
-  findAll(limit: number, startIndex: number): Promise<U[]> {
-    throw new Error("Method not implemented.");
+  async findAll(limit: number, startIndex: number): Promise<U[]> {
+    try {
+      const files = await this.PdfFIlesModel.find()
+        .sort({ createdAt: -1 })
+        .skip(startIndex)
+        .limit(limit)
+      return files as unknown as U[]
+    } catch (error) {
+      return handleRepoError(error)
+    }
   }
 
   findById(): Promise<U | null> {

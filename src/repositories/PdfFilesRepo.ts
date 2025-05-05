@@ -10,12 +10,22 @@ class PdfFilesRepo implements IPdfFilesRepo {
     private pdfFileBaseRepo: IPdfFilesBaseRepo<Partial<IPdfFileDb>, IPdfFileDb>
   ) { }
 
-  countPdfFiles(): Promise<number> {
-    throw new Error("Method not implemented.");
+  async countPdfFiles(): Promise<number> {
+    try {
+      const count = await this.pdfFileBaseRepo.count()
+      return count
+    } catch (error) {
+      throw error
+    }
   }
 
-  findAllPdfFiles(limit: number, startIndex: number): Promise<IPdfFile[]> {
-    throw new Error("Method not implemented.");
+  async findAllPdfFiles(limit: number, startIndex: number): Promise<IPdfFile[]> {
+    try {
+      const files = await this.pdfFileBaseRepo.findAll(limit, startIndex)
+      return files.map(item => convertIPdfFileDbToIPdfFile(item))
+    } catch (error) {
+      throw error
+    }
   }
 
   findPdfFIlesById(): Promise<IPdfFile | null> {

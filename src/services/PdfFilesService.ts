@@ -1,4 +1,4 @@
-import { ServiceReturnType } from "../constants/types";
+import { PaginationPdfFiles, ServiceReturnType } from "../constants/types";
 import IPdfFile from "../interface/IPdfFile";
 import IPdfFilesRepo from "../interface/IPdfFilesRepo";
 import IPdfFilesService from "../interface/IPdfFilesService";
@@ -7,11 +7,25 @@ import { handleServiceData } from '../util/handleService'
 class PdfFilesService implements IPdfFilesService {
 
   constructor(
-    private pdfFileRepo: IPdfFilesRepo
+    private pdfFileRepo: IPdfFilesRepo,
+    private limit: number
   ) { }
 
-  getPdfFiles(page: number): ServiceReturnType<IPdfFile[]> {
-    throw new Error("Method not implemented.");
+  async getPdfFiles(page: number): ServiceReturnType<PaginationPdfFiles> {
+    try {
+      const startIndex = (page - 1) * this.limit
+      const total = await this.pdfFileRepo.countPdfFiles()
+      const numberOfPages = Math.ceil(total / this.limit)
+      const pdfFiles = await this.pdfFileRepo.findAllPdfFiles(this.limit, startIndex)
+      const paginationData: PaginationPdfFiles = {
+        pdfFiles,
+        currentPage: page,
+        numberOfPages
+      }
+      return handleServiceData(paginationData)
+    } catch (error) {
+      throw error
+    }
   }
 
   getPdfFileById(pdfFileId: string): ServiceReturnType<IPdfFile | null> {

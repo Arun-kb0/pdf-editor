@@ -1,8 +1,8 @@
 import IPdfFile from "./IPdfFile";
-import { ServiceReturnType } from '../constants/types'
+import { PaginationPdfFiles, ServiceReturnType } from '../constants/types'
 
 interface IPdfFilesService {
-  getPdfFiles(page: number): ServiceReturnType<IPdfFile[]>
+  getPdfFiles(page: number): ServiceReturnType<PaginationPdfFiles>
   getPdfFileById(pdfFileId: string): ServiceReturnType<IPdfFile | null>
   createPdfFile(data: Partial<IPdfFile>): ServiceReturnType<IPdfFile>
   updatePdfFile(pdfFileId: string, data: Partial<IPdfFile>): ServiceReturnType<IPdfFile | null>
