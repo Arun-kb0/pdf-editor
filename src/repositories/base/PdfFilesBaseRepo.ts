@@ -58,8 +58,17 @@ class PdfFilesBaseRepo<T, U> implements IPdfFilesBaseRepo<T, U> {
     }
   }
 
-  findByIdAndDelete(id: string): Promise<U | null> {
-    throw new Error("Method not implemented.");
+  async findByIdAndDelete(id: string): Promise<U | null> {
+    try {
+      const objId = convertToObjectId(id)
+      const deleted = await this.PdfFIlesModel.findOneAndDelete(
+        { _id: objId },
+        { new: true }
+      )
+      return deleted as unknown as U
+    } catch (error) {
+      return handleRepoError(error)
+    }
   }
 
 }

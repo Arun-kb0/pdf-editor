@@ -50,8 +50,13 @@ class PdfFilesService implements IPdfFilesService {
     }
   }
 
-  deletePdfFile(pdfFileId: string): ServiceReturnType<IPdfFile | null> {
-    throw new Error("Method not implemented.");
+  async deletePdfFile(pdfFileId: string): ServiceReturnType<IPdfFile | null> {
+    try {
+      const deletedFile = await this.pdfFileRepo.findPdfFileByIdAndDelete(pdfFileId)
+      return handleServiceData(deletedFile)
+    } catch (error) {
+      throw error
+    }
   }
 
 }

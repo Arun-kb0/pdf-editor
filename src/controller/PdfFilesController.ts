@@ -69,8 +69,16 @@ class PdfFilesController implements IPdfFilesController {
     }
   }
 
-  deletePdfFile(req: Request, res: Response, next: NextFunction): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deletePdfFile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { pdfFileId } = req.params
+      if(typeof pdfFileId !== 'string') throw new HttpError(httpStatus.BAD_REQUEST,'PdfFileId is required')
+      const svcRes = await this.pdfFilesService.deletePdfFile(pdfFileId)
+      validateResponse(svcRes)
+      res.status(httpStatus.OK).json({ deletedFile: svcRes.data })
+    } catch (error) {
+      next(error)
+    }
   }
 
 }

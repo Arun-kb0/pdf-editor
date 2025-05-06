@@ -44,11 +44,7 @@ class PdfFilesRepo implements IPdfFilesRepo {
 
   async findPdfFileByIdAndUpdate(id: string, data: Partial<IPdfFile>): Promise<IPdfFile | null> {
     try {
-      console.log('inside repo ')
-      console.log(data)
       const convertedPdfFile = convertIPdfFileToIPdfFileDb(data)
-      console.log(convertedPdfFile)
-
       const updatedFile = await this.pdfFileBaseRepo.findByIdAndUpdate(id, convertedPdfFile)
       return updatedFile ? convertIPdfFileDbToIPdfFile(updatedFile) : null
     } catch (error) {
@@ -56,8 +52,13 @@ class PdfFilesRepo implements IPdfFilesRepo {
     }
   }
 
-  findPdfFileByIdAndDelete(id: string): Promise<IPdfFile | null> {
-    throw new Error("Method not implemented.");
+  async findPdfFileByIdAndDelete(id: string): Promise<IPdfFile | null> {
+    try {
+      const deletedFile = await this.pdfFileBaseRepo.findByIdAndDelete(id)
+      return deletedFile ? convertIPdfFileDbToIPdfFile(deletedFile) : null
+    } catch (error) {
+      throw error
+    }
   }
 
 }
