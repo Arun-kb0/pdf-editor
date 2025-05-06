@@ -1,4 +1,5 @@
 interface IPdfFile {
+  _id: string
   name: string
   file: {
     data: Buffer
